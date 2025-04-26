@@ -1,0 +1,26 @@
+{
+  "title": "Song Title Here",
+  "artist": "Artist Name Here",
+  "bpm": 120,
+  "duration": 60.0,
+  "notes": [
+    {
+      "key": "C",
+      "lane": 0,
+      "time": 1.0,
+      "hold": 0.0
+    },
+    {
+      "key": "D",
+      "lane": 1,
+      "time": 2.0,
+      "hold": 0.0
+    },
+    {
+      "key": "E",
+      "lane": 2,
+      "time": 3.0,
+      "hold": 0.5
+    }
+  ]
+}

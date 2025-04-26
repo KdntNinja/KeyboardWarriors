@@ -1,113 +1,111 @@
 package main
 
 import (
-	"bytes"
 	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/audio/mp3"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
+	"sync"
 )
 
-const (
-	sampleRate = 44100
-)
-
-// AudioManager handles loading and playing audio files
+// AudioManager handles sound effects for the game
 type AudioManager struct {
-	initialized  bool
 	audioContext *audio.Context
-	noteSounds   map[string][]byte // Store audio data for each note
+	noteSounds   map[string]*audio.Player
+	mutex        sync.Mutex
 }
 
 // NewAudioManager creates a new audio manager
-func NewAudioManager() *AudioManager {
-	return &AudioManager{
-		initialized: false,
-		noteSounds:  make(map[string][]byte),
+func NewAudioManager() (*AudioManager, error) {
+	// Initialize audio with 44.1kHz sample rate
+	audioContext := audio.NewContext(44100)
+
+	// Create audio manager
+	am := &AudioManager{
+		audioContext: audioContext,
+		noteSounds:   make(map[string]*audio.Player),
+		mutex:        sync.Mutex{},
 	}
+
+	// Load note sounds
+	err := am.loadSounds()
+	if err != nil {
+		return nil, err
+	}
+
+	log.Println("Audio system initialized")
+	return am, nil
 }
 
-// Initialize sets up the audio context and loads sound files
-func (am *AudioManager) Initialize() error {
-	log.Println("Initializing audio system...")
-
-	// Create audio context
-	am.audioContext = audio.NewContext(sampleRate)
-
-	// Load note sound files from the audio directory
+// loadSounds loads all note sound files
+func (am *AudioManager) loadSounds() error {
+	// List of notes to load
 	notes := []string{"C", "D", "E", "F", "G", "A"}
+	successCount := 0
 
+	// Load each note sound
 	for _, note := range notes {
 		filename := filepath.Join("audio", "note_"+note+".mp3")
-
-		// Check if file exists
-		if _, err := os.Stat(filename); os.IsNotExist(err) {
-			log.Printf("Warning: Sound file %s not found", filename)
-			continue
-		}
-
-		// Load the audio file data
-		data, err := os.ReadFile(filename)
+		player, err := am.loadSound(filename)
 		if err != nil {
-			log.Printf("Error reading sound file %s: %v", filename, err)
+			log.Printf("Error loading sound for note %s: %v", note, err)
 			continue
 		}
 
-		// Store the audio data
-		am.noteSounds[note] = data
+		// Store the player
+		am.noteSounds[note] = player
 		log.Printf("Loaded sound for note: %s from %s", note, filename)
+		successCount++
 	}
 
-	am.initialized = true
-	log.Println("Audio system initialized")
+	log.Printf("Successfully loaded %d of %d sound files", successCount, len(notes))
 	return nil
 }
 
-// PlayNote plays the sound for the given note
-func (am *AudioManager) PlayNote(note string) {
-	if !am.initialized {
-		return
-	}
-
-	// Get the audio data for this note
-	data, found := am.noteSounds[note]
-	if !found {
-		log.Printf("No sound loaded for note: %s", note)
-		return
-	}
-
-	// Create a reader for the audio data
-	reader := bytes.NewReader(data)
-
-	// Decode the MP3 data
-	decoded, err := mp3.DecodeWithSampleRate(sampleRate, reader)
+// loadSound loads a single sound file and returns an audio player
+func (am *AudioManager) loadSound(filename string) (*audio.Player, error) {
+	// Open the file
+	file, err := os.Open(filename)
 	if err != nil {
-		log.Printf("Error decoding MP3 data for note %s: %v", note, err)
-		return
+		return nil, err
 	}
 
-	// Create a new player for this sound
-	player, err := am.audioContext.NewPlayer(decoded)
+	// Close the file when we're done
+	defer file.Close()
+
+	// Decode the MP3
+	decoded, err := mp3.DecodeWithSampleRate(44100, file)
 	if err != nil {
-		log.Printf("Error creating player for note %s: %v", note, err)
-		return
+		return nil, err
 	}
 
-	// Play the sound once
-	player.Play()
+	// Create a byte slice from the decoded audio
+	audioBytes, err := io.ReadAll(decoded)
+	if err != nil {
+		return nil, err
+	}
 
-	// For a 1-second audio file, we can just let it play without explicitly stopping it
-	// The player will be garbage collected after it finishes
-
-	log.Printf("Playing note: %s", note)
+	// Create an audio player from the bytes
+	player := audio.NewPlayerFromBytes(am.audioContext, audioBytes)
+	return player, nil
 }
 
-// Close cleans up the audio resources
-func (am *AudioManager) Close() {
-	if !am.initialized {
+// PlayNote plays the sound for a specific note
+func (am *AudioManager) PlayNote(note string) {
+	am.mutex.Lock()
+	defer am.mutex.Unlock()
+
+	// Check if we have the note sound
+	player, exists := am.noteSounds[note]
+	if !exists {
 		return
 	}
 
-	log.Println("Audio system closed")
+	// Rewind and play the sound
+	if player != nil {
+		player.Rewind()
+		player.Play()
+	}
 }

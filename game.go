@@ -7,6 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"golang.org/x/image/font/basicfont"
 	"image/color"
+	"log"
 	"time"
 )
 
@@ -32,6 +33,7 @@ type Game struct {
 	songPlayer   *SongPlayer
 	lastHitTime  time.Time
 	lastHitLane  int
+	lastHitScore int // Score of the last hit note
 	lastMissTime time.Time
 	lastMissLane int
 	audioManager *AudioManager
@@ -39,6 +41,7 @@ type Game struct {
 	totalNotes   int
 	hitNotes     int
 	endTime      time.Time
+	titleScreen  *TitleScreen // New title screen component
 }
 
 func NewGame(songs []*Song, audioManager *AudioManager) *Game {
@@ -61,6 +64,9 @@ func NewGame(songs []*Song, audioManager *AudioManager) *Game {
 		songPlayer = NewSongPlayer(songs[0])
 	}
 
+	// Create title screen
+	titleScreen := NewTitleScreen(songs)
+
 	return &Game{
 		notes:        []*Note{},
 		keyBindings:  keyBindings,
@@ -70,6 +76,7 @@ func NewGame(songs []*Song, audioManager *AudioManager) *Game {
 		currentSong:  0,
 		songPlayer:   songPlayer,
 		audioManager: audioManager,
+		titleScreen:  titleScreen,
 	}
 }
 
@@ -81,32 +88,43 @@ func (g *Game) Update() error {
 			g.startNewGame()
 		}
 
-		// Change song with left/right arrow keys when on the title screen
-		if inpututil.IsKeyJustPressed(ebiten.KeyArrowRight) && g.currentSong < len(g.songs)-1 {
+		// Change song with up/down arrow keys when on the title screen
+		songChanged := false
+		if inpututil.IsKeyJustPressed(ebiten.KeyArrowDown) && g.currentSong < len(g.songs)-1 {
 			g.currentSong++
-			g.songPlayer = NewSongPlayer(g.songs[g.currentSong])
-		} else if inpututil.IsKeyJustPressed(ebiten.KeyArrowLeft) && g.currentSong > 0 {
+			songChanged = true
+		} else if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) && g.currentSong > 0 {
 			g.currentSong--
+			songChanged = true
+		}
+
+		// Update title screen and song player if song changed
+		if songChanged {
+			g.titleScreen.SetCurrentSong(g.currentSong)
 			g.songPlayer = NewSongPlayer(g.songs[g.currentSong])
 		}
 
 	case StatePlaying:
-		// Get notes from the song player if available
-		if g.songPlayer != nil && g.songPlayer.IsPlaying {
+		// Always update the song player in gameplay mode
+		if g.songPlayer != nil {
 			notesToAdd := g.songPlayer.Update()
 
 			// Convert song notes to game notes and add them
-			if len(notesToAdd) > 0 {
+			if len(notesToAdd) > 0 && g.songPlayer.IsPlaying {
 				screenWidth, _ := g.Layout(0, 0)
-				for _, songNote := range notesToAdd {
-					newNote := CreateNoteFromSong(songNote, screenWidth, g.keyBindings)
+				for i, songNote := range notesToAdd {
+					newNote := CreateNoteFromSong(songNote, screenWidth, g.keyBindings, g.songs[g.currentSong].BPM)
 					g.notes = append(g.notes, newNote)
 					g.totalNotes++
+					// Log note generation for debugging
+					if i == 0 {
+						log.Printf("Generated note: %s at time %.1f", songNote.Key, songNote.Time)
+					}
 				}
 			}
 
-			// Check if the song is over
-			if !g.songPlayer.IsPlaying && len(g.notes) == 0 {
+			// Check if the song is over and all notes have been processed
+			if !g.songPlayer.IsPlaying && !g.songPlayer.IsCounting && len(g.notes) == 0 {
 				// Song is over and all notes are gone, show song complete screen
 				g.gameState = StateSongComplete
 				g.endTime = time.Now()
@@ -122,8 +140,8 @@ func (g *Game) Update() error {
 		for _, note := range g.notes {
 			note.Update()
 
-			// Check for misses
-			if note.status == StatusActive && note.y > g.barY+20 {
+			// Check for misses - a note is missed only when it has completely passed the hit line
+			if note.status == StatusActive && note.HasPassedHitLine(g.barY) {
 				note.Miss()
 				g.misses++
 
@@ -156,16 +174,25 @@ func (g *Game) Update() error {
 				// Check for note hits
 				for _, note := range g.notes {
 					if note.key == key && note.status == StatusActive {
-						// Simple hit window
-						if note.y >= g.barY-20 && note.y <= g.barY+20 {
+						// Use the improved hitbox check - entire length of note
+						if note.IsAtHitLine(g.barY) {
+							// Calculate accuracy for scoring
+							accuracy := note.GetHitAccuracy(g.barY)
+
+							// Better scoring based on accuracy
+							baseScore := 100
+							accuracyBonus := int(float64(baseScore) * accuracy)
+							totalScore := baseScore + accuracyBonus
+
 							note.Hit()
-							g.score += 100
+							g.score += totalScore
 							g.hitNotes++
 							noteHit = true
 
 							// Flash the lane to indicate hit
 							g.lastHitTime = time.Now()
 							g.lastHitLane = note.lane
+							g.lastHitScore = totalScore
 
 							// Play sound only when a note is actually hit
 							if g.audioManager != nil {
@@ -214,64 +241,72 @@ func (g *Game) startNewGame() {
 	g.totalNotes = 0
 	g.hitNotes = 0
 	g.accuracy = 0
+	g.lastHitScore = 0
 	g.gameState = StatePlaying
 
-	// Start the song player
+	// Start the song player with countdown
 	if g.songPlayer != nil {
 		g.songPlayer.Start()
 	}
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	screenWidth, _ := g.Layout(0, 0)
+	screenWidth, screenHeight := g.Layout(0, 0)
 
 	// Background
 	screen.Fill(color.Black)
 
 	switch g.gameState {
 	case StateTitle:
-		// Draw title screen
-		title := "KEYBOARD WARRIOR"
-		text.Draw(screen, title, basicfont.Face7x13, 240, 120, color.White)
-
-		// Show current song info
-		if len(g.songs) > 0 && g.currentSong < len(g.songs) {
-			songTitle := fmt.Sprintf("Song: %s", g.songs[g.currentSong].Title)
-			text.Draw(screen, songTitle, basicfont.Face7x13, 240, 240, color.White)
-			songArtist := fmt.Sprintf("By: %s", g.songs[g.currentSong].Artist)
-			text.Draw(screen, songArtist, basicfont.Face7x13, 240, 260, color.White)
-
-			// Show difficulty level based on the number of notes
-			var difficulty string
-			if g.songs[g.currentSong].Notes != nil {
-				noteCount := len(g.songs[g.currentSong].Notes)
-				if noteCount < 20 {
-					difficulty = "Easy"
-				} else if noteCount < 40 {
-					difficulty = "Medium"
-				} else {
-					difficulty = "Hard"
-				}
-				difficultyText := fmt.Sprintf("Difficulty: %s (%d notes)", difficulty, noteCount)
-				text.Draw(screen, difficultyText, basicfont.Face7x13, 220, 280, color.White)
-			}
-
-			text.Draw(screen, "Use arrow keys to change song", basicfont.Face7x13, 220, 300, color.White)
-		}
-
-		text.Draw(screen, "Press SPACE to start", basicfont.Face7x13, 260, 340, color.White)
-		text.Draw(screen, "Use Q,W,E,I,O,P to play", basicfont.Face7x13, 250, 360, color.White)
+		// Draw the improved title screen
+		g.titleScreen.Draw(screen, screenWidth, screenHeight)
 
 	case StatePlaying:
 		// Draw lane separators and lane highlights
 		laneWidth := float64(screenWidth) / 6
+
+		// Draw countdown if active
+		if g.songPlayer != nil && g.songPlayer.IsCounting {
+			countdown := g.songPlayer.GetCountdownSeconds()
+			countdownText := fmt.Sprintf("%d", countdown)
+
+			// Center of screen
+			centerX := screenWidth / 2
+			fontColor := color.RGBA{R: 255, G: 255, B: 255, A: 255}
+
+			// Add "GET READY!" text above
+			readyText := "GET READY!"
+			text.Draw(screen, readyText, basicfont.Face7x13,
+				centerX-len(readyText)*4,
+				screenHeight/2-40,
+				fontColor)
+
+			// Draw the countdown number
+			text.Draw(screen, countdownText, basicfont.Face7x13,
+				centerX-4,
+				screenHeight/2+20,
+				fontColor)
+		}
+
 		for i := 0; i < 6; i++ {
 			// Draw hit/miss feedback
-			// Hit feedback (flashes blue)
+			// Hit feedback (flashes blue/green/gold based on score)
 			if i == g.lastHitLane && time.Since(g.lastHitTime) < 200*time.Millisecond {
 				hitFeedback := ebiten.NewImage(int(laneWidth), 480)
 				alpha := 255 - uint8(time.Since(g.lastHitTime).Milliseconds())
-				hitFeedback.Fill(color.RGBA{R: 100, G: 180, B: 255, A: alpha})
+
+				// Default hit color (blue)
+				hitColor := color.RGBA{R: 100, G: 180, B: 255, A: alpha}
+
+				// Perfect hit color (gold) for scores over 150
+				if g.lastHitScore > 150 {
+					hitColor = color.RGBA{R: 255, G: 215, B: 0, A: alpha}
+				} else if g.lastHitScore > 120 {
+					// Good hit color (green) for scores over 120
+					hitColor = color.RGBA{R: 50, G: 205, B: 50, A: alpha}
+				}
+
+				hitFeedback.Fill(hitColor)
 				op := &ebiten.DrawImageOptions{}
 				op.GeoM.Translate(float64(i)*laneWidth, 0)
 				screen.DrawImage(hitFeedback, op)
@@ -309,14 +344,36 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		for _, note := range g.notes {
 			// Only draw active notes, skip hit or missed notes
 			if note.status == StatusActive {
-				noteImage := ebiten.NewImage(40, 20)
+				// Create appropriate sized note image based on hold time
+				noteImage := ebiten.NewImage(40, int(note.height))
 				noteImage.Fill(GetNoteColor(note.key))
 
-				op := &ebiten.DrawImageOptions{}
-				op.GeoM.Translate(note.x, note.y)
-				screen.DrawImage(noteImage, op)
+				// For hold notes, add a border
+				if note.holdTime > 0 {
+					// Draw a border for hold notes
+					borderColor := color.RGBA{R: 255, G: 255, B: 255, A: 180}
+					borderImage := ebiten.NewImage(40, int(note.height))
+					borderImage.Fill(borderColor)
 
-				// Draw the note letter
+					// Draw border as a 2px frame
+					noteInnerImage := ebiten.NewImage(36, int(note.height)-4)
+					noteInnerImage.Fill(GetNoteColor(note.key))
+
+					innerOp := &ebiten.DrawImageOptions{}
+					innerOp.GeoM.Translate(2, 2)
+					borderImage.DrawImage(noteInnerImage, innerOp)
+
+					op := &ebiten.DrawImageOptions{}
+					op.GeoM.Translate(note.x, note.y)
+					screen.DrawImage(borderImage, op)
+				} else {
+					// Regular note without hold
+					op := &ebiten.DrawImageOptions{}
+					op.GeoM.Translate(note.x, note.y)
+					screen.DrawImage(noteImage, op)
+				}
+
+				// Draw the note letter on top of the note
 				text.Draw(screen, note.key, basicfont.Face7x13, int(note.x)+15, int(note.y)+15, color.Black)
 			}
 		}
@@ -405,6 +462,7 @@ func DrawEndScreen(screen *ebiten.Image, width int, message string, score, hits,
 	text.Draw(screen, continueText, basicfont.Face7x13, centerX-len(continueText)*3, 340, color.White)
 }
 
+// Layout implements the ebiten.Game interface
 func (g *Game) Layout(int, int) (int, int) {
 	return 640, 480
 }

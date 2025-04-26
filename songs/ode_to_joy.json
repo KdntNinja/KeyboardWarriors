@@ -1,0 +1,188 @@
+{
+  "title": "Ode to Joy",
+  "artist": "Beethoven",
+  "bpm": 120,
+  "duration": 16.0,
+  "notes": [
+    {
+      "key": "E",
+      "lane": 2,
+      "time": 0.0,
+      "hold": 0.5
+    },
+    {
+      "key": "E",
+      "lane": 2,
+      "time": 0.5,
+      "hold": 0.5
+    },
+    {
+      "key": "F",
+      "lane": 3,
+      "time": 1.0,
+      "hold": 0.5
+    },
+    {
+      "key": "G",
+      "lane": 4,
+      "time": 1.5,
+      "hold": 0.5
+    },
+    {
+      "key": "G",
+      "lane": 4,
+      "time": 2.0,
+      "hold": 0.5
+    },
+    {
+      "key": "F",
+      "lane": 3,
+      "time": 2.5,
+      "hold": 0.5
+    },
+    {
+      "key": "E",
+      "lane": 2,
+      "time": 3.0,
+      "hold": 0.5
+    },
+    {
+      "key": "D",
+      "lane": 1,
+      "time": 3.5,
+      "hold": 0.5
+    },
+    {
+      "key": "C",
+      "lane": 0,
+      "time": 4.0,
+      "hold": 0.5
+    },
+    {
+      "key": "C",
+      "lane": 0,
+      "time": 4.5,
+      "hold": 0.5
+    },
+    {
+      "key": "D",
+      "lane": 1,
+      "time": 5.0,
+      "hold": 0.5
+    },
+    {
+      "key": "E",
+      "lane": 2,
+      "time": 5.5,
+      "hold": 0.5
+    },
+    {
+      "key": "E",
+      "lane": 2,
+      "time": 6.0,
+      "hold": 0.5
+    },
+    {
+      "key": "D",
+      "lane": 1,
+      "time": 6.5,
+      "hold": 0.5
+    },
+    {
+      "key": "D",
+      "lane": 1,
+      "time": 7.0,
+      "hold": 0.5
+    },
+    {
+      "key": "E",
+      "lane": 2,
+      "time": 8.0,
+      "hold": 0.5
+    },
+    {
+      "key": "E",
+      "lane": 2,
+      "time": 8.5,
+      "hold": 0.5
+    },
+    {
+      "key": "F",
+      "lane": 3,
+      "time": 9.0,
+      "hold": 0.5
+    },
+    {
+      "key": "G",
+      "lane": 4,
+      "time": 9.5,
+      "hold": 0.5
+    },
+    {
+      "key": "G",
+      "lane": 4,
+      "time": 10.0,
+      "hold": 0.5
+    },
+    {
+      "key": "F",
+      "lane": 3,
+      "time": 10.5,
+      "hold": 0.5
+    },
+    {
+      "key": "E",
+      "lane": 2,
+      "time": 11.0,
+      "hold": 0.5
+    },
+    {
+      "key": "D",
+      "lane": 1,
+      "time": 11.5,
+      "hold": 0.5
+    },
+    {
+      "key": "C",
+      "lane": 0,
+      "time": 12.0,
+      "hold": 0.5
+    },
+    {
+      "key": "C",
+      "lane": 0,
+      "time": 12.5,
+      "hold": 0.5
+    },
+    {
+      "key": "D",
+      "lane": 1,
+      "time": 13.0,
+      "hold": 0.5
+    },
+    {
+      "key": "E",
+      "lane": 2,
+      "time": 13.5,
+      "hold": 0.5
+    },
+    {
+      "key": "D",
+      "lane": 1,
+      "time": 14.0,
+      "hold": 0.5
+    },
+    {
+      "key": "C",
+      "lane": 0,
+      "time": 14.5,
+      "hold": 0.5
+    },
+    {
+      "key": "C",
+      "lane": 0,
+      "time": 15.0,
+      "hold": 0.5
+    }
+  ]
+}

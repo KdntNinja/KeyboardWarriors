@@ -1,34 +1,26 @@
-## Keyboard Warrior - Music Game
+# Keyboard Warrior
 
-A rhythm game where notes are loaded from JSON song files with detailed end screens.
+A rhythm-based music game built with Go and Ebiten. Hit keys in time with the falling notes to score points.
 
-### How to Play
+## How to Play
 
-1. Use arrow keys to browse through available songs on the title screen
-2. Press SPACE to start playing the selected song
-3. Use Q, W, E, I, O, P keys to hit the notes when they reach the white line
-4. The game ends after 20 misses or when the song is complete
-5. View your performance statistics on the end screen
-6. Press SPACE to return to the title screen
+1. **Start the Game**: Run the game with `go run .` or the built executable.
+2. **Select a Song**: Use the UP/DOWN arrow keys to choose a song from the list.
+3. **Start Playing**: Press SPACE to begin.
+4. **Hit Notes**: Press the corresponding keys (QWEIOP) when notes reach the white hit line.
+   - Q = C (Red notes)
+   - W = D (Orange notes)
+   - E = E (Yellow notes)
+   - I = F (Green notes)
+   - O = G (Blue notes)
+   - P = A (Purple notes)
+5. **Score Points**: More accurate hits earn higher scores.
+6. **Hold Notes**: For longer notes, keep the key pressed until the note passes.
 
-### Features
+## Adding Custom Songs
 
-- Title screen with song selection
-- Gameplay with visual feedback
-- Detailed end screens showing:
-    - Final score
-    - Notes hit count
-    - Accuracy percentage
-    - Performance rank (S, A, B, C, D, F)
-- Different screens for game over and song completion
+You can add your own songs to the game by creating JSON files in the `songs` directory.
 
-### Game States
+### Song File Format
 
-- Title Screen: Select songs and start a game
-- Playing: Hit notes as they come down lanes
-- Game Over: Displayed when player misses too many notes
-- Song Complete: Shown when a song finishes successfully
-
-### Song JSON Format
-
-Songs are stored in JSON files in the `songs` directory. Each song file follows this format:
+Create a new JSON file in the `songs` directory with the following format:
