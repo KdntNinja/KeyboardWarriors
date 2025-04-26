@@ -1,21 +1,67 @@
 package main
 
 import (
-	"fmt"
+	"github.com/hajimehoshi/ebiten/v2"
+	"log"
+	"math/rand"
+	"time"
 )
 
-//TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
-// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
-
 func main() {
-	//TIP <p>Press <shortcut actionId="ShowIntentionActions"/> when your caret is at the underlined text
-	// to see how GoLand suggests fixing the warning.</p><p>Alternatively, if available, click the lightbulb to view possible fixes.</p>
-	s := "gopher"
-	fmt.Printf("Hello and welcome, %s!\n", s)
+	// Seed random number generator
+	rand.NewSource(time.Now().UnixNano())
 
-	for i := 1; i <= 5; i++ {
-		//TIP <p>To start your debugging session, right-click your code in the editor and select the Debug option.</p> <p>We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-		// for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.</p>
-		fmt.Println("i =", 100/i)
+	// Load songs from JSON files
+	var songs []*Song
+
+	simpleSong, err := LoadSongFromFile("songs/simple_song.json")
+	if err != nil {
+		log.Printf("Error loading simple_song.json: %v", err)
+	} else {
+		songs = append(songs, simpleSong)
 	}
+
+	twinkleSong, err := LoadSongFromFile("songs/twinkle_star.json")
+	if err != nil {
+		log.Printf("Error loading twinkle_star.json: %v", err)
+	} else {
+		songs = append(songs, twinkleSong)
+	}
+
+	// If no songs were loaded, create a default song
+	if len(songs) == 0 {
+		defaultSong := &Song{
+			Title:    "Default Song",
+			Artist:   "System",
+			BPM:      120,
+			Duration: 20.0,
+			Notes: []SongNote{
+				{Key: "C", Lane: 0, Time: 1.0},
+				{Key: "D", Lane: 1, Time: 2.0},
+				{Key: "E", Lane: 2, Time: 3.0},
+				{Key: "F", Lane: 3, Time: 4.0},
+				{Key: "G", Lane: 4, Time: 5.0},
+				{Key: "A", Lane: 5, Time: 6.0},
+			},
+		}
+		songs = append(songs, defaultSong)
+	}
+
+	// Initialize audio manager
+	audioManager := NewAudioManager()
+	if err := audioManager.Initialize(); err != nil {
+		log.Printf("Warning: Failed to initialize audio: %v", err)
+	}
+
+	// Create and run the game with the loaded songs
+	game := NewGame(songs, audioManager)
+	ebiten.SetWindowSize(640, 480)
+	ebiten.SetWindowTitle("Keyboard Warrior - JSON Music")
+
+	if err := ebiten.RunGame(game); err != nil {
+		log.Fatal(err)
+	}
+
+	// Clean up audio resources
+	audioManager.Close()
 }
