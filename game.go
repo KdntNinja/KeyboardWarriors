@@ -149,7 +149,10 @@ func (g *Game) Update() error {
 
 		// Check for key presses
 		for key, ebitenKey := range g.keyBindings {
+			// Handle key presses
 			if inpututil.IsKeyJustPressed(ebitenKey) {
+				noteHit := false
+
 				// Check for note hits
 				for _, note := range g.notes {
 					if note.key == key && note.status == StatusActive {
@@ -158,18 +161,26 @@ func (g *Game) Update() error {
 							note.Hit()
 							g.score += 100
 							g.hitNotes++
-
-							// Play the note sound
-							if g.audioManager != nil {
-								g.audioManager.PlayNote(note.key)
-							}
+							noteHit = true
 
 							// Flash the lane to indicate hit
 							g.lastHitTime = time.Now()
 							g.lastHitLane = note.lane
+
+							// Play sound only when a note is actually hit
+							if g.audioManager != nil {
+								g.audioManager.PlayNote(key)
+							}
+
 							break
 						}
 					}
+				}
+
+				// Visual feedback even when no note is hit
+				if !noteHit {
+					// Just show that the key was pressed but no note was hit
+					// No sound is played when no note is hit
 				}
 			}
 		}
@@ -188,6 +199,7 @@ func (g *Game) Update() error {
 		// Return to the title screen after 5 seconds or when space is pressed
 		if time.Since(g.endTime) > 5*time.Second || inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 			g.gameState = StateTitle
+			// No need to stop sounds since they play once and stop automatically
 		}
 	}
 

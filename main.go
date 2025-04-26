@@ -4,12 +4,22 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"log"
 	"math/rand"
+	"os"
 	"time"
 )
 
 func main() {
 	// Seed random number generator
 	rand.NewSource(time.Now().UnixNano())
+
+	// Ensure audio directory exists
+	audioDir := "audio"
+	if _, err := os.Stat(audioDir); os.IsNotExist(err) {
+		err := os.MkdirAll(audioDir, 0755)
+		if err != nil {
+			log.Printf("Warning: Could not create audio directory: %v", err)
+		}
+	}
 
 	// Load songs from JSON files
 	var songs []*Song
