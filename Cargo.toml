@@ -1,0 +1,30 @@
+[package]
+name = "KeyboardWarriors"
+version = "0.1.0"
+edition = "2021"
+description = "A piano-based Guitar Hero clone"
+
+[dependencies]
+bevy = { version = "0.12", features = ["wayland"] }
+bevy_kira_audio = { version = "0.18", features = ["mp3"] }
+rand = "0.8"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "1.0", features = ["v4"] }
+
+[lib]
+name = "keyboard_warriors_lib"
+path = "src/lib.rs"
+
+[[bin]]
+name = "keyboard_warriors"
+path = "src/main.rs"
+
+# Enable optimizations for dependencies in debug mode
+[profile.dev.package."*"]
+opt-level = 3
+
+# Enable high optimizations for release builds
+[profile.release]
+opt-level = 3
+lto = "thin"
