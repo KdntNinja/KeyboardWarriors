@@ -13,7 +13,24 @@
   <component name="ChangeListManager">
     <list default="true" id="bc0389bc-cef6-4f51-94fc-e5a861e44470" name="Changes" comment="Enhance gameplay with title screen, improved scoring, and visuals&#10;&#10;Introduced a new title screen for song selection and enhanced gameplay with better hit accuracy scoring and feedback visuals. Notes now include hold durations, and gameplay adjustments such as countdowns, colored feedback, and hold-note rendering were implemented. Codebase refactoring includes modularizing dynamics and adding debugging tools for smoother development.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/piano/systems.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/piano/systems.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/song_template.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/A4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/As4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/B4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/C4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/C5.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/Cs4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/Cs5.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/D4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/Ds4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/E4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/F4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/Fs4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/G4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sounds/Gs4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sound_generation.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/audio/sound_generation.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/piano/components.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/piano/components.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/piano/setup.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/piano/setup.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +84,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Cargo.Expand keyboard_warriors::piano::components.executor": "Run",
     "Cargo.Run.executor": "Run",
     "DefaultGoTemplateProperty": "Go File",
     "Go Build.Run.executor": "Run",
