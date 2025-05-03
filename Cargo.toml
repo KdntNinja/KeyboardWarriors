@@ -5,16 +5,12 @@ edition = "2021"
 description = "A piano-based Guitar Hero clone"
 
 [dependencies]
-bevy = { version = "0.12", features = ["wayland"] }
-bevy_kira_audio = { version = "0.18", features = ["mp3"] }
-rand = "0.8"
+bevy = { version = "0.12.0", features = ["dynamic_linking", "wayland"] }
+bevy_kira_audio = { version = "0.18.0", features = ["mp3", "wav"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-uuid = { version = "1.0", features = ["v4"] }
-
-[lib]
-name = "keyboard_warriors_lib"
-path = "src/lib.rs"
+rodio = "0.17.0"
+rand = "0.9.1"
 
 [[bin]]
 name = "keyboard_warriors"
@@ -24,7 +20,21 @@ path = "src/main.rs"
 [profile.dev.package."*"]
 opt-level = 3
 
-# Enable high optimizations for release builds
+# Enable more optimization in the release profile at the cost of compile time.
 [profile.release]
-opt-level = 3
+# Compile the entire crate as one unit.
+# Slows compile times, marginal improvements.
+codegen-units = 1
+# Do a second optimization pass over the entire program, including dependencies.
+# Slows compile times, marginal improvements.
 lto = "thin"
+
+# Optimize for size in the wasm-release profile to reduce load times and bandwidth usage on the web.
+[profile.wasm-release]
+# Default to release profile values.
+inherits = "release"
+# Optimize with size in mind (also try "z", sometimes it is better).
+# Slightly slows compile times, great improvements to file size and runtime performance.
+opt-level = "s"
+# Strip all debugging information from the binary to slightly reduce file size.
+strip = "debuginfo"
