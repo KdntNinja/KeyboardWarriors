@@ -1,5 +1,5 @@
-use bevy::prelude::*;
 use crate::piano::components::*;
+use bevy::prelude::*;
 
 // System to set up the piano keys and camera
 pub fn setup(mut commands: Commands, _asset_server: Res<AssetServer>) {
@@ -31,8 +31,10 @@ pub fn setup(mut commands: Commands, _asset_server: Res<AssetServer>) {
 
     // Spawn white keys
     for (i, (note_name, frequency, keyboard_key)) in white_keys.iter().enumerate() {
-        let x_position = (i as f32 * WHITE_KEY_WIDTH) - (white_keys.len() as f32 * WHITE_KEY_WIDTH / 2.0) + WHITE_KEY_WIDTH / 2.0;
-        
+        let x_position = (i as f32 * WHITE_KEY_WIDTH)
+            - (white_keys.len() as f32 * WHITE_KEY_WIDTH / 2.0)
+            + WHITE_KEY_WIDTH / 2.0;
+
         commands.spawn((
             SpriteBundle {
                 sprite: Sprite {
@@ -51,7 +53,7 @@ pub fn setup(mut commands: Commands, _asset_server: Res<AssetServer>) {
                 is_pressed: false,
             },
         ));
-        
+
         // Add note label
         commands.spawn(Text2dBundle {
             text: Text {
@@ -66,23 +68,28 @@ pub fn setup(mut commands: Commands, _asset_server: Res<AssetServer>) {
                 alignment: TextAlignment::Center,
                 ..default()
             },
-            transform: Transform::from_xyz(x_position, PIANO_Y_POSITION - WHITE_KEY_HEIGHT/2.0 + 16.0, 1.0),
+            transform: Transform::from_xyz(
+                x_position,
+                PIANO_Y_POSITION - WHITE_KEY_HEIGHT / 2.0 + 16.0,
+                1.0,
+            ),
             ..default()
         });
     }
 
     // Spawn black keys
     let black_key_positions = [0, 1, 3, 4, 5]; // Positions relative to white keys (no black key between E-F and B-C)
-    
+
     for (i, (note_name, frequency, keyboard_key)) in black_keys.iter().enumerate() {
         if i >= black_key_positions.len() {
             continue; // Skip if we don't have a position for this black key
         }
-        
+
         let white_key_index = black_key_positions[i];
-        let x_position = ((white_key_index as f32 * WHITE_KEY_WIDTH) + (WHITE_KEY_WIDTH / 2.0)) 
-                        - (white_keys.len() as f32 * WHITE_KEY_WIDTH / 2.0) + WHITE_KEY_WIDTH / 2.0;
-        
+        let x_position = ((white_key_index as f32 * WHITE_KEY_WIDTH) + (WHITE_KEY_WIDTH / 2.0))
+            - (white_keys.len() as f32 * WHITE_KEY_WIDTH / 2.0)
+            + WHITE_KEY_WIDTH / 2.0;
+
         commands.spawn((
             SpriteBundle {
                 sprite: Sprite {
@@ -90,7 +97,11 @@ pub fn setup(mut commands: Commands, _asset_server: Res<AssetServer>) {
                     custom_size: Some(Vec2::new(BLACK_KEY_WIDTH, BLACK_KEY_HEIGHT)),
                     ..default()
                 },
-                transform: Transform::from_xyz(x_position, PIANO_Y_POSITION + (WHITE_KEY_HEIGHT - BLACK_KEY_HEIGHT) / 2.0, 1.0),
+                transform: Transform::from_xyz(
+                    x_position,
+                    PIANO_Y_POSITION + (WHITE_KEY_HEIGHT - BLACK_KEY_HEIGHT) / 2.0,
+                    1.0,
+                ),
                 ..default()
             },
             PianoKey {
@@ -101,7 +112,7 @@ pub fn setup(mut commands: Commands, _asset_server: Res<AssetServer>) {
                 is_pressed: false,
             },
         ));
-        
+
         // Add note label
         commands.spawn(Text2dBundle {
             text: Text {
@@ -116,7 +127,13 @@ pub fn setup(mut commands: Commands, _asset_server: Res<AssetServer>) {
                 alignment: TextAlignment::Center,
                 ..default()
             },
-            transform: Transform::from_xyz(x_position, PIANO_Y_POSITION + (WHITE_KEY_HEIGHT - BLACK_KEY_HEIGHT) / 2.0 - BLACK_KEY_HEIGHT/2.0 + 16.0, 2.0),
+            transform: Transform::from_xyz(
+                x_position,
+                PIANO_Y_POSITION + (WHITE_KEY_HEIGHT - BLACK_KEY_HEIGHT) / 2.0
+                    - BLACK_KEY_HEIGHT / 2.0
+                    + 16.0,
+                2.0,
+            ),
             ..default()
         });
     }

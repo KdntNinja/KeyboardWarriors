@@ -1,8 +1,8 @@
-use bevy::prelude::*;
-use bevy_kira_audio::{Audio, AudioControl};
 use crate::piano::components::*;
-use bevy::time::Timer;
 use crate::piano::components::{FallingNote, NOTE_SPEED};
+use bevy::prelude::*;
+use bevy::time::Timer;
+use bevy_kira_audio::{Audio, AudioControl};
 use rand::seq::IteratorRandom;
 
 // Resource to track time for spawning notes
@@ -10,10 +10,7 @@ use rand::seq::IteratorRandom;
 pub struct NoteSpawnTimer(pub Timer);
 
 // System to handle keyboard input and update piano key state
-pub fn handle_key_input(
-    keyboard: Res<Input<KeyCode>>,
-    mut piano_keys: Query<&mut PianoKey>,
-) {
+pub fn handle_key_input(keyboard: Res<Input<KeyCode>>, mut piano_keys: Query<&mut PianoKey>) {
     for mut piano_key in piano_keys.iter_mut() {
         // Update key press state based on keyboard input
         piano_key.is_pressed = keyboard.pressed(piano_key.keyboard_key);
@@ -21,9 +18,7 @@ pub fn handle_key_input(
 }
 
 // System to update piano key visuals based on press state
-pub fn update_key_visuals(
-    mut query: Query<(&PianoKey, &mut Sprite)>,
-) {
+pub fn update_key_visuals(mut query: Query<(&PianoKey, &mut Sprite)>) {
     for (key, mut sprite) in query.iter_mut() {
         match key.key_type {
             PianoKeyType::White => {
@@ -55,13 +50,18 @@ pub fn play_sounds(
     for key in piano_keys.iter() {
         if keyboard.just_pressed(key.keyboard_key) {
             // Find the corresponding audio handle
-            if let Some((_, handle)) = sound_handles.handles.iter()
-                .find(|(name, _)| name == &key.note_name) {
-                
+            if let Some((_, handle)) = sound_handles
+                .handles
+                .iter()
+                .find(|(name, _)| name == &key.note_name)
+            {
                 // Play the sound
                 audio.play(handle.clone());
-                
-                println!("Playing note: {} at frequency {}", key.note_name, key.frequency);
+
+                println!(
+                    "Playing note: {} at frequency {}",
+                    key.note_name, key.frequency
+                );
             }
         }
     }

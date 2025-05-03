@@ -52,6 +52,8 @@ pub struct SoundHandles {
 
 impl Default for SoundHandles {
     fn default() -> Self {
-        Self { handles: Vec::new() }
+        Self {
+            handles: Vec::new(),
+        }
     }
 }

@@ -20,7 +20,7 @@ fn main() {
                     ..default()
                 }),
                 ..default()
-            }), 
+            }),
             AudioPlugin,
             PianoPlugin,
             AudioGenerationPlugin,
