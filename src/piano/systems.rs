@@ -77,7 +77,7 @@ pub fn spawn_falling_notes(
     // Update the timer
     if timer.0.tick(time.delta()).just_finished() {
         // Randomly select a piano key to spawn a note for
-        if let Some(key) = piano_keys.iter().choose(&mut rand::thread_rng()) {
+        if let Some(key) = piano_keys.iter().choose(&mut rand::rng()) {
             commands.spawn((
                 FallingNote {
                     note_name: key.note_name.clone(),
