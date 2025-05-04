@@ -13,24 +13,30 @@
   <component name="ChangeListManager">
     <list default="true" id="bc0389bc-cef6-4f51-94fc-e5a861e44470" name="Changes" comment="Enhance gameplay with title screen, improved scoring, and visuals&#10;&#10;Introduced a new title screen for song selection and enhanced gameplay with better hit accuracy scoring and feedback visuals. Notes now include hold durations, and gameplay adjustments such as countdowns, colored feedback, and hold-note rendering were implemented. Codebase refactoring includes modularizing dynamics and adding debugging tools for smoother development.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/song_template.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/A4.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/As4.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/B4.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/C4.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/C5.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/Cs4.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/Cs5.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/D4.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/Ds4.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/E4.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/F4.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/Fs4.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/G4.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sounds/Gs4.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/audio/sound_generation.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/audio/sound_generation.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/piano/components.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/piano/components.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/piano/setup.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/piano/setup.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/mod.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sound_generation.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/A4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/As4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/B4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/C4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/C5.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/Cs4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/Cs5.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/D4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/Ds4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/E4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/F4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/Fs4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/G4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/audio/sounds/Gs4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/piano/components.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/piano/mod.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/piano/setup.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/piano/systems.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/songs/song_template.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,41 +88,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Cargo.Expand keyboard_warriors::piano::components.executor": "Run",
-    "Cargo.Run.executor": "Run",
-    "DefaultGoTemplateProperty": "Go File",
-    "Go Build.Run.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Notification.DisplayName-DoNotAsk-grazie.pro.advertisement": "Plugin suggestion",
-    "Notification.DoNotAsk-grazie.pro.advertisement": "true",
-    "RunOnceActivity.GoLinterPluginOnboarding": "true",
-    "RunOnceActivity.GoLinterPluginStorageMigration": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "RunOnceActivity.rust.reset.selective.auto.import": "true",
-    "SHELLCHECK.PATH": "/home/kaiden/.local/share/JetBrains/RustRover2024.3/Shell Script/shellcheck",
-    "deletionFromPopupRequiresConfirmation": "false",
-    "git-widget-placeholder": "master",
-    "go.import.settings.migrated": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/home/kaiden/RustroverProjects/KeyboardWarriors",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "/home/kaiden/GolandProjects/KeyboardWarriors/main.go",
-    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
-    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
-    "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Cargo.Expand keyboard_warriors::piano::components.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Run.executor&quot;: &quot;Run&quot;,
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Go Build.Run.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-grazie.pro.advertisement&quot;: &quot;Plugin suggestion&quot;,
+    &quot;Notification.DoNotAsk-grazie.pro.advertisement&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.GoLinterPluginOnboarding&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.GoLinterPluginStorageMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;/home/kaiden/.local/share/JetBrains/RustRover2024.3/Shell Script/shellcheck&quot;,
+    &quot;deletionFromPopupRequiresConfirmation&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/kaiden/RustroverProjects/KeyboardWarriors&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;/home/kaiden/GolandProjects/KeyboardWarriors/main.go&quot;,
+    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
+    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.LLMConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/assets" />
@@ -168,6 +174,7 @@
       <workItem from="1746213462945" duration="4459000" />
       <workItem from="1746267927041" duration="707000" />
       <workItem from="1746270967811" duration="4025000" />
+      <workItem from="1746369735172" duration="252000" />
     </task>
     <servers />
   </component>
